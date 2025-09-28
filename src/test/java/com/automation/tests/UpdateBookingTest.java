@@ -3,7 +3,7 @@ package com.automation.tests;
 import com.automation.base.BaseTest;
 import com.automation.config.ConfigReader;
 import com.automation.model.BookingRequestModel;
-import com.automation.service.BookingService;
+import com.automation.requests.BookingRequests;
 import io.restassured.response.Response;
 import org.junit.jupiter.api.MethodOrderer;
 import org.junit.jupiter.api.Order;
@@ -22,7 +22,7 @@ public class UpdateBookingTest extends BaseTest {
     @Order(1)
     public void createBookingForUpdateTest() {
 
-        BookingService bookingService = new BookingService();
+        BookingRequests bookingService = new BookingRequests();
         // 1. Kreiraj booking (da imamo validan ID)
         BookingRequestModel booking = new BookingRequestModel();
         booking.setFirstname("Beba");
@@ -36,7 +36,7 @@ public class UpdateBookingTest extends BaseTest {
         booking.setBookingdates(dates);
         booking.setAdditionalneeds("room service");
 
-        BookingService service = new BookingService();
+        BookingRequests service = new BookingRequests();
         Response createBookingResponse;
         createBookingResponse = service.createBooking(booking);
         bookingId = createBookingResponse.jsonPath().getInt("bookingid");
@@ -50,7 +50,7 @@ public class UpdateBookingTest extends BaseTest {
     @Order(2)
     public void updateBookingTest() {
 
-        BookingService bookingService = new BookingService();
+        BookingRequests bookingService = new BookingRequests();
         BookingRequestModel updateBooking = new BookingRequestModel();
         updateBooking.setFirstname("Masa");
         updateBooking.setLastname("Spasic");

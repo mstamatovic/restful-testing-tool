@@ -13,7 +13,7 @@ import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
 @TestMethodOrder(MethodOrderer.OrderAnnotation.class)
-public class DeleteBookingTest {
+public class DeleteBookingInvalidTokenTest {
 
     public static int bookingId;
     public static Response createResponse;
@@ -21,7 +21,7 @@ public class DeleteBookingTest {
 
     @Test
     @Order(1)
-    public void createBookingBeforeDelete() {
+    public void createBookingBeforeDeleteTest() {
         // 1. Kreiraj booking (da imamo validan ID)
         BookingRequestModel booking = new BookingRequestModel();
         booking.setFirstname("ToDelete");
@@ -47,50 +47,15 @@ public class DeleteBookingTest {
 
     @Test
     @Order(2)
-    public void deleteBookingSuccessfully() {
+    public void deleteBookingInvalidTokenTest() {
         bookingId = createResponse.jsonPath().getInt("bookingid");
         assertTrue(bookingId > 0, "Booking ID mora biti validan");
 
-        // 2. Dobij token
-        String authToken = bookingService.createAuthToken(ConfigReader.getUsername(), ConfigReader.getPassword());
-        assertNotNull(authToken, "Token ne sme biti null");
-
-        // 3. Obriši booking
-//        Response deleteResponse = bookingService.deleteBooking(bookingId);
-        Response deleteResponse = bookingService.deleteBooking(bookingId, authToken);
+        Response deleteResponse = bookingService.deleteBooking(bookingId, " invalid_token");
         System.out.println(deleteResponse.asString());
         deleteResponse
                 .then()
-                .statusCode(201);
-        assertTrue(deleteResponse.asString().contains("Created"));
-
-
-        // 4. Proveri da više ne postoji
-        Response getAfterDelete = bookingService.getBookingById(bookingId);
-        getAfterDelete.then().statusCode(404);
+                .statusCode(403);
+        assertTrue(deleteResponse.asString().contains("Forbidden"));
     }
-
-//    @Test
-//    public void shouldReturn403WhenDeletingWithoutValidToken() {
-//        // Kreiraj booking
-//        Booking booking = new Booking();
-//        booking.setFirstname("NoAuth");
-//        booking.setLastname("Test");
-//        booking.setTotalprice(100);
-//        booking.setDepositpaid(true);
-//
-//        Booking.BookingDates dates = new Booking.BookingDates();
-//        dates.setCheckin("2025-02-01");
-//        dates.setCheckout("2025-02-03");
-//        booking.setBookingdates(dates);
-//
-//        BookingService service = new BookingService();
-//        Response createResponse = service.createBooking(booking);
-//        createResponse.then().statusCode(200);
-//        int bookingId = createResponse.jsonPath().getInt("bookingid");
-//
-//        // Pokušaj brisanje BEZ tokena (ili sa nevalidnim)
-//        Response deleteResponse = service.deleteBooking(bookingId, "invalid_token_123");
-//        deleteResponse.then().statusCode(403);
-//    }
 }

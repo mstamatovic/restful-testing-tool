@@ -2,7 +2,9 @@ package com.automation.tests;
 
 import com.automation.base.BaseTest;
 import com.automation.model.BookingRequestModel;
-import com.automation.service.BookingService;
+import com.automation.requests.BookingRequests;
+import com.automation.response.ResponseHandler;
+import com.automation.response.ResponseValidator;
 import io.restassured.response.Response;
 import org.junit.jupiter.api.MethodOrderer;
 import org.junit.jupiter.api.Order;
@@ -15,33 +17,18 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
 @TestMethodOrder(MethodOrderer.OrderAnnotation.class)
 public class GetBookingByIdTest extends BaseTest {
 
-    public static Response createResponse;
     public static int bookingId;
 
     @Test
     @Order(1)
     public void createBookingToGetId() {
 
-        BookingService bookingService = new BookingService();
-        // 1. Kreiraj booking (da imamo validan ID)
-        BookingRequestModel booking = new BookingRequestModel();
-        booking.setFirstname("Isidora");
-        booking.setLastname("Stamatovic");
-        booking.setTotalprice(5000);
-        booking.setDepositpaid(false);
+        BookingRequests bookingRequest = new BookingRequests();
+        ResponseHandler responseHandler = new ResponseHandler();
 
-        BookingRequestModel.BookingDates dates = new BookingRequestModel.BookingDates();
-        dates.setCheckin("2025-01-01");
-        dates.setCheckout("2025-01-05");
-        booking.setBookingdates(dates);
-        booking.setAdditionalneeds("Lunch");
+        Response createBookingResponse = bookingRequest.createBooking(BookingRequestModel.createBookingRequestModel());
 
-        BookingService service = new BookingService();
-
-        createResponse = service.createBooking(booking);
-        bookingId = createResponse.jsonPath().getInt("bookingid");
-        System.out.println(bookingId);
-        createResponse.then().statusCode(200);
+        bookingId = responseHandler.getBookingIdFromResponse(createBookingResponse);
 
 
     }
@@ -50,13 +37,10 @@ public class GetBookingByIdTest extends BaseTest {
     @Order(2)
     public void getBookingByIdTest() {
 
-        BookingService bookingService = new BookingService();
+        BookingRequests getBookingById = new BookingRequests();
 
-        Response response = bookingService.getBookingById(bookingId);
-        response.then().statusCode(200);
+        Response getBookingByIdResponse = getBookingById.getBookingById(bookingId);
 
-        String firstname = response.jsonPath().getString("firstname");
-        System.out.println(firstname);
-        assertEquals("Isidora", firstname, "Firstname should be Isidora");
+        ResponseValidator.verifyGetBookingById(bookingId, getBookingByIdResponse);
     }
 }

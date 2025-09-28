@@ -3,7 +3,7 @@ package com.automation.tests;
 import com.automation.base.BaseTest;
 import com.automation.config.ConfigReader;
 import com.automation.model.BookingRequestModel;
-import com.automation.service.BookingService;
+import com.automation.requests.BookingRequests;
 import io.restassured.response.Response;
 import org.junit.jupiter.api.MethodOrderer;
 import org.junit.jupiter.api.Order;
@@ -22,7 +22,7 @@ public class PartialUpdateBookingTest extends BaseTest {
     @Order(1)
     public void createBookingForUpdateTest() {
 
-        BookingService bookingService = new BookingService();
+        BookingRequests bookingService = new BookingRequests();
         // 1. Kreiraj booking (da imamo validan ID)
         BookingRequestModel booking = new BookingRequestModel();
         booking.setFirstname("Mina");
@@ -36,7 +36,7 @@ public class PartialUpdateBookingTest extends BaseTest {
         booking.setBookingdates(dates);
         booking.setAdditionalneeds("room service");
 
-        BookingService service = new BookingService();
+        BookingRequests service = new BookingRequests();
         Response createBookingResponse;
         createBookingResponse = service.createBooking(booking);
         bookingId = createBookingResponse.jsonPath().getInt("bookingid");
@@ -50,24 +50,14 @@ public class PartialUpdateBookingTest extends BaseTest {
     @Order(2)
     public void partialUpdateBookingTest() {
 
-        BookingService bookingService = new BookingService();
+        BookingRequests bookingService = new BookingRequests();
         BookingRequestModel updateBooking = new BookingRequestModel();
-//        updateBooking.setFirstname("Masa");
-//        updateBooking.setLastname("Spasic");
         updateBooking.setTotalprice(7000);
-//        updateBooking.setDepositpaid(true);
-//
-//        BookingRequestModel.BookingDates dates = new BookingRequestModel.BookingDates();
-//        dates.setCheckin("2025-02-02");
-//        dates.setCheckout("2025-03-06");
-//        updateBooking.setBookingdates(dates);
-//        updateBooking.setAdditionalneeds("vegan meals");
 
         String authToken = bookingService.createAuthToken(ConfigReader.getUsername(), ConfigReader.getPassword());
         assertNotNull(authToken, "Token ne sme biti null");
 
         Response updateResponse = bookingService.partialUpdateBooking(authToken, bookingId, updateBooking);
-//        System.out.println("*** " + bookingId + " ***");
         updateResponse.then().statusCode(200);
 
         int totalprice = updateResponse.jsonPath().getInt("totalprice");
