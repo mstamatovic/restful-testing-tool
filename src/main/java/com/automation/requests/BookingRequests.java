@@ -1,6 +1,8 @@
-package com.automation.service;
+package com.automation.requests;
 
 import com.automation.config.ConfigReader;
+import com.automation.constants.Endpoints;
+import com.automation.constants.HeaderParamaters;
 import com.automation.model.AuthRequestModel;
 import com.automation.model.BookingRequestModel;
 import io.restassured.RestAssured;
@@ -8,11 +10,9 @@ import io.restassured.response.Response;
 
 import static io.restassured.RestAssured.given;
 
-public class BookingService {
+public class BookingRequests {
 
     private static final String BASE_URL = ConfigReader.getBaseUrl();
-    private static final String BOOKING_ENDPOINT = "/booking";
-    private static final String AUTH_ENDPOINT = "/auth";
 
     static {
         RestAssured.baseURI = BASE_URL;
@@ -20,57 +20,55 @@ public class BookingService {
 
     public Response createBooking(BookingRequestModel booking) {
         return given()
-                .header("Content-Type", "application/json")
+                .header(HeaderParamaters.CONTENT_TYPE, HeaderParamaters.APPLICATION_JSON)
                 .body(booking)
                 .when()
-                .post(BOOKING_ENDPOINT);
+                .post(Endpoints.BOOKING);
     }
 
     public Response getBookingById(int bookingId) {
         return given()
                 .when()
-                .get(BOOKING_ENDPOINT + "/" + bookingId);
+                .get(Endpoints.BOOKING + "/" + bookingId);
     }
 
     public Response getAllBookings() {
         return given()
                 .when()
-                .get(BOOKING_ENDPOINT);
+                .get(Endpoints.BOOKING);
     }
 
     public Response deleteBooking(int bookingId, String token) {
         return given()
-                .header("Cookie", "token=" + token)
-//                .header("Authorization", "Basic YWRtaW46cGFzc3dvcmQxMjM=")
+                .header(HeaderParamaters.COOKIE, "token=" + token)
                 .when()
-                .delete(BOOKING_ENDPOINT + "/" + bookingId);
+                .delete(Endpoints.BOOKING + "/" + bookingId);
     }
 
     public Response updateBooking(int bookingId, BookingRequestModel booking) {
         return given()
 //                .header("Cookie", "token=" + token)
-                .header("Authorization", "Basic YWRtaW46cGFzc3dvcmQxMjM=")
+                .header(HeaderParamaters.AUTHORIZATION, HeaderParamaters.BASIC)
                 .body(booking)
                 .when()
-                .put(BOOKING_ENDPOINT + "/" + bookingId);
+                .put(Endpoints.BOOKING + "/" + bookingId);
     }
 
     public Response partialUpdateBooking(String token, int bookingId, BookingRequestModel booking) {
         return given()
-                .header("Cookie", "token=" + token)
-//                .header("Authorization", "Basic YWRtaW46cGFzc3dvcmQxMjM=")
+                .header(HeaderParamaters.COOKIE, "token=" + token)
                 .body(booking)
                 .when()
-                .patch(BOOKING_ENDPOINT + "/" + bookingId);
+                .patch(Endpoints.BOOKING + "/" + bookingId);
     }
 
     public String createAuthToken(String username, String password) {
         AuthRequestModel authRequest = new AuthRequestModel(username, password);
         return given()
-                .header("Content-Type", "application/json")
+                .header(HeaderParamaters.CONTENT_TYPE, HeaderParamaters.APPLICATION_JSON)
                 .body(authRequest)
                 .when()
-                .post("/auth")
+                .post(Endpoints.AUTH)
                 .then()
                 .extract()
                 .jsonPath()
