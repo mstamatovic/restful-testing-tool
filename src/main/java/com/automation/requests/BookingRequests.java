@@ -13,12 +13,6 @@ import static io.restassured.RestAssured.given;
 
 public class BookingRequests {
 
-    private static final String BASE_URL = ConfigReader.getBaseUrl();
-
-    static {
-        RestAssured.baseURI = BASE_URL;
-    }
-
     public Response createBooking(BookingRequestModel booking) {
         return given()
                 .header(HeaderParamaters.CONTENT_TYPE, HeaderParamaters.APPLICATION_JSON)

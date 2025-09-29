@@ -14,7 +14,7 @@ import org.junit.jupiter.api.TestMethodOrder;
 @TestMethodOrder(MethodOrderer.OrderAnnotation.class)
 public class DeleteBookingInvalidTokenTest {
 
-    public static int bookingId;
+    private static int bookingId;
 
     @Test
     @Order(1)

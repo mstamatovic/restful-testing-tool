@@ -17,7 +17,7 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
 @TestMethodOrder(MethodOrderer.OrderAnnotation.class)
 public class GetBookingByIdTest extends BaseTest {
 
-    public static int bookingId;
+    private static int bookingId;
 
     @Test
     @Order(1)
