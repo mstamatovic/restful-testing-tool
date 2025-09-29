@@ -24,23 +24,19 @@ public class UpdateBookingTest extends BaseTest {
     @Test
     @Order(1)
     public void createBookingForUpdateTest() {
-
         BookingRequests createBookingRequest = new BookingRequests();
         ResponseHandler responseHandler = new ResponseHandler();
 
         Response createBookingResponse = createBookingRequest.createBooking(BookingRequestModel.createBookingRequestModel());
 
         bookingId = responseHandler.getBookingIdFromResponse(createBookingResponse);
-
-
     }
 
     @Test
     @Order(2)
     public void updateBookingTest() {
-
         BookingRequests updateBookingRequest = new BookingRequests();
-        BookingRequestModel updateBookingModel = BookingRequestModel.createBookingRequestModel();
+        BookingRequestModel updateBookingModel = BookingRequestModel.updateBookingRequestModel();
 
         String authToken = updateBookingRequest.createAuthToken(ConfigReader.getUsername(), ConfigReader.getPassword());
         assertNotNull(authToken, Messages.INVALID_TOKEN);
@@ -49,6 +45,5 @@ public class UpdateBookingTest extends BaseTest {
 
         ResponseValidator.verifyUpdateBookingIsSuccessful(updateBookingResponse);
         ResponseValidator.verifyBookingIsUpdated(updateBookingResponse);
-
     }
 }

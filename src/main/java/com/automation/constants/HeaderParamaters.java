@@ -8,4 +8,5 @@ public class HeaderParamaters {
     public static final String COOKIE = "Cookie";
     public static final String BASIC = "Basic YWRtaW46cGFzc3dvcmQxMjM=";
     public static final String INVALID_TOKEN = "InvalidToken";
+    public static final String TOKEN = "token=";
 }

@@ -11,15 +11,12 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
 public class ResponseValidator {
 
     public static void verifyBookingIdIsValid(int bookingId, Response response) {
-
         response.then()
                 .statusCode(200);
         assertTrue(bookingId > 0, Messages.INVALID_BOOKING_ID);
-
     }
 
     public static void verifyGetBookingByIdIsFound(int bookingId, Response response) {
-
         ResponseHandler responseHandler = new ResponseHandler();
         response
                 .then()
@@ -39,7 +36,6 @@ public class ResponseValidator {
                 Messages.EXPECTED_CHECKIN);
         assertEquals(JsonProperties.Values.CHECKOUT, responseHandler.getBookingCheckOutFromResponse(response),
                 Messages.EXPECTED_CHECKOUT);
-
     }
 
     public static void verifyBookingByIdIsNotFound(int bookingId, Response response) {
@@ -47,7 +43,6 @@ public class ResponseValidator {
                 .then()
                 .statusCode(404);
         assertTrue(response.asString().contains(ResponseMessages.NOT_FOUND));
-
     }
 
     public static void verifyDeleteBookingWithInvalidTokenIsForbidden(Response response) {
@@ -66,26 +61,21 @@ public class ResponseValidator {
         response
                 .then()
                 .statusCode(200);
-
     }
 
     public static void verifyBookingIsPartiallyUpdated(Response response) {
-
         ResponseHandler responseHandler = new ResponseHandler();
         assertEquals(JsonProperties.Values.TOTALPRICE,
                 responseHandler.getBookingTotalPriceFromResponse(response), Messages.TOTAL_PRICE_NOT_UPDATED);
-
     }
 
     public static void verifyUpdateBookingIsSuccessful(Response response) {
         response
                 .then()
                 .statusCode(200);
-
     }
 
     public static void verifyBookingIsUpdated(Response response) {
-
         ResponseHandler responseHandler = new ResponseHandler();
         response
                 .then()
@@ -105,7 +95,5 @@ public class ResponseValidator {
                 Messages.UPDATE_EXPECTED_CHECKIN);
         assertEquals(JsonProperties.Values.UPDATED_CHECKOUT, responseHandler.getBookingCheckOutFromResponse(response),
                 Messages.UPDATE_EXPECTED_CHECKOUT);
-
-
     }
 }

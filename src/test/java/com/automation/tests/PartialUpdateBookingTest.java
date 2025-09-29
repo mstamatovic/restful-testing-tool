@@ -24,7 +24,6 @@ public class PartialUpdateBookingTest extends BaseTest {
     @Test
     @Order(1)
     public void createBookingForUpdateTest() {
-
         BookingRequests createBookingRequest = new BookingRequests();
         ResponseHandler responseHandler = new ResponseHandler();
 
@@ -32,14 +31,11 @@ public class PartialUpdateBookingTest extends BaseTest {
                 .createBooking(BookingRequestModel.createBookingRequestModel());
 
         bookingId = responseHandler.getBookingIdFromResponse(createBookingResponse);
-
-
     }
 
     @Test
     @Order(2)
     public void partialUpdateBookingTest() {
-
         BookingRequests partialUpdateBookingRequest = new BookingRequests();
         BookingRequestModel partialUpdateBookingModel = new BookingRequestModel();
         partialUpdateBookingModel.setTotalprice(7000);

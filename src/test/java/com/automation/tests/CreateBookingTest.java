@@ -10,10 +10,8 @@ import org.junit.jupiter.api.Test;
 
 public class CreateBookingTest extends BaseTest {
 
-
     @Test
     public void createBookingTest() {
-
         BookingRequests createBookingRequest = new BookingRequests();
         ResponseHandler responseHandler = new ResponseHandler();
 

@@ -2,7 +2,6 @@ package com.automation.constants;
 
 public class Messages {
 
-
     public static final String INVALID_BOOKING_ID = "Invalid Booking *Id*";
     public static final String EXPECTED_FIRST_NAME = "Firstname should be *Milos*";
     public static final String EXPECTED_LAST_NAME = "Lastname should be *Stamatovic*";

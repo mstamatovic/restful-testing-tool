@@ -22,21 +22,17 @@ public class DeleteBookingTest {
     @Test
     @Order(1)
     public void createBookingBeforeDeleteTest() {
-
         BookingRequests createBookingRequest = new BookingRequests();
         ResponseHandler responseHandler = new ResponseHandler();
 
         Response createBookingResponse = createBookingRequest.createBooking(BookingRequestModel.createBookingRequestModel());
 
         bookingId = responseHandler.getBookingIdFromResponse(createBookingResponse);
-
-
     }
 
     @Test
     @Order(2)
     public void deleteBookingSuccessfullyTest() {
-
         BookingRequests deleteBookingRequest = new BookingRequests();
 
         String authToken = deleteBookingRequest.createAuthToken(ConfigReader.getUsername(), ConfigReader.getPassword());
