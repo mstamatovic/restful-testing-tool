@@ -41,6 +41,6 @@ public class GetBookingByIdTest extends BaseTest {
 
         Response getBookingByIdResponse = getBookingById.getBookingById(bookingId);
 
-        ResponseValidator.verifyGetBookingById(bookingId, getBookingByIdResponse);
+        ResponseValidator.verifyGetBookingByIdIsFound(bookingId, getBookingByIdResponse);
     }
 }

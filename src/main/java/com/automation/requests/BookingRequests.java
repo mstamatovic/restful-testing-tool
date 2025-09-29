@@ -45,10 +45,10 @@ public class BookingRequests {
                 .delete(Endpoints.BOOKING + "/" + bookingId);
     }
 
-    public Response updateBooking(int bookingId, BookingRequestModel booking) {
+    public Response updateBooking(String token, int bookingId, BookingRequestModel booking) {
         return given()
-//                .header("Cookie", "token=" + token)
-                .header(HeaderParamaters.AUTHORIZATION, HeaderParamaters.BASIC)
+                .header("Cookie", "token=" + token)
+//                .header(HeaderParamaters.AUTHORIZATION, HeaderParamaters.BASIC)
                 .body(booking)
                 .when()
                 .put(Endpoints.BOOKING + "/" + bookingId);

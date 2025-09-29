@@ -14,10 +14,11 @@ public class CreateBookingTest extends BaseTest {
     @Test
     public void createBookingTest() {
 
-        BookingRequests bookingRequest = new BookingRequests();
+        BookingRequests createBookingRequest = new BookingRequests();
         ResponseHandler responseHandler = new ResponseHandler();
 
-        Response createBookingResponse = bookingRequest.createBooking(BookingRequestModel.createBookingRequestModel());
+        Response createBookingResponse = createBookingRequest
+                .createBooking(BookingRequestModel.createBookingRequestModel());
 
         ResponseValidator
                 .verifyBookingIdIsValid(responseHandler.getBookingIdFromResponse(createBookingResponse),
