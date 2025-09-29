@@ -2,8 +2,11 @@ package com.automation.tests;
 
 import com.automation.base.BaseTest;
 import com.automation.config.ConfigReader;
+import com.automation.constants.Messages;
 import com.automation.model.BookingRequestModel;
 import com.automation.requests.BookingRequests;
+import com.automation.response.ResponseHandler;
+import com.automation.response.ResponseValidator;
 import io.restassured.response.Response;
 import org.junit.jupiter.api.MethodOrderer;
 import org.junit.jupiter.api.Order;
@@ -22,26 +25,13 @@ public class PartialUpdateBookingTest extends BaseTest {
     @Order(1)
     public void createBookingForUpdateTest() {
 
-        BookingRequests bookingService = new BookingRequests();
-        // 1. Kreiraj booking (da imamo validan ID)
-        BookingRequestModel booking = new BookingRequestModel();
-        booking.setFirstname("Mina");
-        booking.setLastname("Spasic");
-        booking.setTotalprice(6000);
-        booking.setDepositpaid(false);
+        BookingRequests createBookingRequest = new BookingRequests();
+        ResponseHandler responseHandler = new ResponseHandler();
 
-        BookingRequestModel.BookingDates dates = new BookingRequestModel.BookingDates();
-        dates.setCheckin("2025-01-01");
-        dates.setCheckout("2025-01-05");
-        booking.setBookingdates(dates);
-        booking.setAdditionalneeds("room service");
+        Response createBookingResponse = createBookingRequest
+                .createBooking(BookingRequestModel.createBookingRequestModel());
 
-        BookingRequests service = new BookingRequests();
-        Response createBookingResponse;
-        createBookingResponse = service.createBooking(booking);
-        bookingId = createBookingResponse.jsonPath().getInt("bookingid");
-        System.out.println(bookingId);
-        createBookingResponse.then().statusCode(200);
+        bookingId = responseHandler.getBookingIdFromResponse(createBookingResponse);
 
 
     }
@@ -50,18 +40,18 @@ public class PartialUpdateBookingTest extends BaseTest {
     @Order(2)
     public void partialUpdateBookingTest() {
 
-        BookingRequests bookingService = new BookingRequests();
-        BookingRequestModel updateBooking = new BookingRequestModel();
-        updateBooking.setTotalprice(7000);
+        BookingRequests partialUpdateBookingRequest = new BookingRequests();
+        BookingRequestModel partialUpdateBookingModel = new BookingRequestModel();
+        partialUpdateBookingModel.setTotalprice(7000);
 
-        String authToken = bookingService.createAuthToken(ConfigReader.getUsername(), ConfigReader.getPassword());
-        assertNotNull(authToken, "Token ne sme biti null");
+        String authToken = partialUpdateBookingRequest
+                .createAuthToken(ConfigReader.getUsername(), ConfigReader.getPassword());
+        assertNotNull(authToken, Messages.INVALID_TOKEN);
 
-        Response updateResponse = bookingService.partialUpdateBooking(authToken, bookingId, updateBooking);
-        updateResponse.then().statusCode(200);
+        Response partialUpdatepdateResponse = partialUpdateBookingRequest
+                .partialUpdateBooking(authToken, bookingId, partialUpdateBookingModel);
 
-        int totalprice = updateResponse.jsonPath().getInt("totalprice");
-
-        assertEquals(totalprice, updateResponse.jsonPath().getInt("totalprice"), "Totalprice should be the same");
+        ResponseValidator.verifyPartialUpdateBookingIsSuccessful(partialUpdatepdateResponse);
+        ResponseValidator.verifyBookingIsPartiallyUpdated(partialUpdatepdateResponse);
     }
 }
