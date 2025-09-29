@@ -2,7 +2,6 @@ package com.automation.constants;
 
 public class JsonProperties {
 
-
     public class Keys {
         public static final String BOOKING_ID = "bookingid";
         public static final String FIRST_NAME = "firstname";
@@ -13,6 +12,7 @@ public class JsonProperties {
         public static final String CHECKIN = "bookingdates.checkin";
         public static final String CHECKOUT = "bookingdates.checkout";
         public static final String BOOKING_DATES = "bookingdates";
+        public static final String TOKEN = "token";
     }
 
     public class Values {

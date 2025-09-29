@@ -22,21 +22,17 @@ public class GetBookingByIdTest extends BaseTest {
     @Test
     @Order(1)
     public void createBookingToGetId() {
-
         BookingRequests bookingRequest = new BookingRequests();
         ResponseHandler responseHandler = new ResponseHandler();
 
         Response createBookingResponse = bookingRequest.createBooking(BookingRequestModel.createBookingRequestModel());
 
         bookingId = responseHandler.getBookingIdFromResponse(createBookingResponse);
-
-
     }
 
     @Test
     @Order(2)
     public void getBookingByIdTest() {
-
         BookingRequests getBookingById = new BookingRequests();
 
         Response getBookingByIdResponse = getBookingById.getBookingById(bookingId);

@@ -3,6 +3,7 @@ package com.automation.requests;
 import com.automation.config.ConfigReader;
 import com.automation.constants.Endpoints;
 import com.automation.constants.HeaderParamaters;
+import com.automation.constants.JsonProperties;
 import com.automation.model.AuthRequestModel;
 import com.automation.model.BookingRequestModel;
 import io.restassured.RestAssured;
@@ -40,15 +41,14 @@ public class BookingRequests {
 
     public Response deleteBooking(int bookingId, String token) {
         return given()
-                .header(HeaderParamaters.COOKIE, "token=" + token)
+                .header(HeaderParamaters.COOKIE, HeaderParamaters.TOKEN + token)
                 .when()
                 .delete(Endpoints.BOOKING + "/" + bookingId);
     }
 
     public Response updateBooking(String token, int bookingId, BookingRequestModel booking) {
         return given()
-                .header("Cookie", "token=" + token)
-//                .header(HeaderParamaters.AUTHORIZATION, HeaderParamaters.BASIC)
+                .header(HeaderParamaters.COOKIE, HeaderParamaters.TOKEN + token)
                 .body(booking)
                 .when()
                 .put(Endpoints.BOOKING + "/" + bookingId);
@@ -56,7 +56,7 @@ public class BookingRequests {
 
     public Response partialUpdateBooking(String token, int bookingId, BookingRequestModel booking) {
         return given()
-                .header(HeaderParamaters.COOKIE, "token=" + token)
+                .header(HeaderParamaters.COOKIE, HeaderParamaters.TOKEN + token)
                 .body(booking)
                 .when()
                 .patch(Endpoints.BOOKING + "/" + bookingId);
@@ -72,6 +72,6 @@ public class BookingRequests {
                 .then()
                 .extract()
                 .jsonPath()
-                .getString("token");
+                .getString(JsonProperties.Keys.TOKEN);
     }
 }

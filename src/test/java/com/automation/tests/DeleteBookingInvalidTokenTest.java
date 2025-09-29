@@ -1,6 +1,5 @@
 package com.automation.tests;
 
-import com.automation.config.ConfigReader;
 import com.automation.constants.HeaderParamaters;
 import com.automation.model.BookingRequestModel;
 import com.automation.requests.BookingRequests;
@@ -20,7 +19,6 @@ public class DeleteBookingInvalidTokenTest {
     @Test
     @Order(1)
     public void createBookingBeforeDeleteTest() {
-
         BookingRequests createBookingRequest = new BookingRequests();
         ResponseHandler responseHandler = new ResponseHandler();
 
@@ -28,19 +26,16 @@ public class DeleteBookingInvalidTokenTest {
                 .createBooking(BookingRequestModel.createBookingRequestModel());
 
         bookingId = responseHandler.getBookingIdFromResponse(createBookingResponse);
-
     }
 
     @Test
     @Order(2)
     public void deleteBookingInvalidTokenTest() {
-
         BookingRequests deleteBookingRequest = new BookingRequests();
 
         Response deleteBookingResponse = deleteBookingRequest
                 .deleteBooking(bookingId, HeaderParamaters.INVALID_TOKEN);
 
         ResponseValidator.verifyDeleteBookingWithInvalidTokenIsForbidden(deleteBookingResponse);
-
     }
 }

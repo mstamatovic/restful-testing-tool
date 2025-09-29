@@ -50,7 +50,5 @@ public class BookingRequestModel {
         updateBooking.setAdditionalneeds("vegan meals");
 
         return updateBooking;
-
-
     }
 }
