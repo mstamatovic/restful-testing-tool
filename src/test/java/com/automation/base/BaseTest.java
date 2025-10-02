@@ -1,7 +1,6 @@
 package com.automation.base;
 
 import com.automation.config.ConfigReader;
-import com.automation.service.BookingService;
 import io.restassured.RestAssured;
 import org.junit.jupiter.api.BeforeAll;
 

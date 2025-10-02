@@ -1,8 +1,11 @@
 package com.automation.tests;
 
 import com.automation.config.ConfigReader;
+import com.automation.constants.Messages;
 import com.automation.model.BookingRequestModel;
-import com.automation.service.BookingService;
+import com.automation.requests.BookingRequests;
+import com.automation.response.ResponseHandler;
+import com.automation.response.ResponseValidator;
 import io.restassured.response.Response;
 import org.junit.jupiter.api.MethodOrderer;
 import org.junit.jupiter.api.Order;
@@ -10,87 +13,35 @@ import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.TestMethodOrder;
 
 import static org.junit.jupiter.api.Assertions.assertNotNull;
-import static org.junit.jupiter.api.Assertions.assertTrue;
 
 @TestMethodOrder(MethodOrderer.OrderAnnotation.class)
 public class DeleteBookingTest {
 
-    public static int bookingId;
-    public static Response createResponse;
-    public static BookingService bookingService = new BookingService();
+    private static int bookingId;
 
     @Test
     @Order(1)
-    public void createBookingBeforeDelete() {
-        // 1. Kreiraj booking (da imamo validan ID)
-        BookingRequestModel booking = new BookingRequestModel();
-        booking.setFirstname("ToDelete");
-        booking.setLastname("JUnit");
-        booking.setTotalprice(200);
-        booking.setDepositpaid(false);
+    public void createBookingBeforeDeleteTest() {
+        BookingRequests createBookingRequest = new BookingRequests();
+        ResponseHandler responseHandler = new ResponseHandler();
 
-        BookingRequestModel.BookingDates dates = new BookingRequestModel.BookingDates();
-        dates.setCheckin("2025-01-01");
-        dates.setCheckout("2025-01-05");
-        booking.setBookingdates(dates);
-        booking.setAdditionalneeds("Lunch");
+        Response createBookingResponse = createBookingRequest.createBooking(BookingRequestModel.createBookingRequestModel());
 
-        BookingService service = new BookingService();
-
-        createResponse = service.createBooking(booking);
-        bookingId = createResponse.jsonPath().getInt("bookingid");
-        System.out.println(bookingId);
-        createResponse.then().statusCode(200);
-
-
+        bookingId = responseHandler.getBookingIdFromResponse(createBookingResponse);
     }
 
     @Test
     @Order(2)
-    public void deleteBookingSuccessfully() {
-        bookingId = createResponse.jsonPath().getInt("bookingid");
-        assertTrue(bookingId > 0, "Booking ID mora biti validan");
+    public void deleteBookingSuccessfullyTest() {
+        BookingRequests deleteBookingRequest = new BookingRequests();
 
-        // 2. Dobij token
-        String authToken = bookingService.createAuthToken(ConfigReader.getUsername(), ConfigReader.getPassword());
-        assertNotNull(authToken, "Token ne sme biti null");
+        String authToken = deleteBookingRequest.createAuthToken(ConfigReader.getUsername(), ConfigReader.getPassword());
+        assertNotNull(authToken, Messages.INVALID_TOKEN);
 
-        // 3. Obriši booking
-//        Response deleteResponse = bookingService.deleteBooking(bookingId);
-        Response deleteResponse = bookingService.deleteBooking(bookingId, authToken);
-        System.out.println(deleteResponse.asString());
-        deleteResponse
-                .then()
-                .statusCode(201);
-        assertTrue(deleteResponse.asString().contains("Created"));
+        Response deleteBookingResponse = deleteBookingRequest.deleteBooking(bookingId, authToken);
+        Response getBookingIdAfterDelete = deleteBookingRequest.getBookingById(bookingId);
 
-
-        // 4. Proveri da više ne postoji
-        Response getAfterDelete = bookingService.getBookingById(bookingId);
-        getAfterDelete.then().statusCode(404);
+        ResponseValidator.verifyBookingDeletedSuccessfully(bookingId, deleteBookingResponse);
+        ResponseValidator.verifyBookingByIdIsNotFound(bookingId, getBookingIdAfterDelete);
     }
-
-//    @Test
-//    public void shouldReturn403WhenDeletingWithoutValidToken() {
-//        // Kreiraj booking
-//        Booking booking = new Booking();
-//        booking.setFirstname("NoAuth");
-//        booking.setLastname("Test");
-//        booking.setTotalprice(100);
-//        booking.setDepositpaid(true);
-//
-//        Booking.BookingDates dates = new Booking.BookingDates();
-//        dates.setCheckin("2025-02-01");
-//        dates.setCheckout("2025-02-03");
-//        booking.setBookingdates(dates);
-//
-//        BookingService service = new BookingService();
-//        Response createResponse = service.createBooking(booking);
-//        createResponse.then().statusCode(200);
-//        int bookingId = createResponse.jsonPath().getInt("bookingid");
-//
-//        // Pokušaj brisanje BEZ tokena (ili sa nevalidnim)
-//        Response deleteResponse = service.deleteBooking(bookingId, "invalid_token_123");
-//        deleteResponse.then().statusCode(403);
-//    }
 }

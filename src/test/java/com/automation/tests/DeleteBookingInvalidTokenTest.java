@@ -1,6 +1,6 @@
 package com.automation.tests;
 
-import com.automation.base.BaseTest;
+import com.automation.constants.HeaderParamaters;
 import com.automation.model.BookingRequestModel;
 import com.automation.requests.BookingRequests;
 import com.automation.response.ResponseHandler;
@@ -11,32 +11,31 @@ import org.junit.jupiter.api.Order;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.TestMethodOrder;
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertTrue;
-
 @TestMethodOrder(MethodOrderer.OrderAnnotation.class)
-public class GetBookingByIdTest extends BaseTest {
+public class DeleteBookingInvalidTokenTest {
 
     private static int bookingId;
 
     @Test
     @Order(1)
-    public void createBookingToGetId() {
-        BookingRequests bookingRequest = new BookingRequests();
+    public void createBookingBeforeDeleteTest() {
+        BookingRequests createBookingRequest = new BookingRequests();
         ResponseHandler responseHandler = new ResponseHandler();
 
-        Response createBookingResponse = bookingRequest.createBooking(BookingRequestModel.createBookingRequestModel());
+        Response createBookingResponse = createBookingRequest
+                .createBooking(BookingRequestModel.createBookingRequestModel());
 
         bookingId = responseHandler.getBookingIdFromResponse(createBookingResponse);
     }
 
     @Test
     @Order(2)
-    public void getBookingByIdTest() {
-        BookingRequests getBookingById = new BookingRequests();
+    public void deleteBookingInvalidTokenTest() {
+        BookingRequests deleteBookingRequest = new BookingRequests();
 
-        Response getBookingByIdResponse = getBookingById.getBookingById(bookingId);
+        Response deleteBookingResponse = deleteBookingRequest
+                .deleteBooking(bookingId, HeaderParamaters.INVALID_TOKEN);
 
-        ResponseValidator.verifyGetBookingByIdIsFound(bookingId, getBookingByIdResponse);
+        ResponseValidator.verifyDeleteBookingWithInvalidTokenIsForbidden(deleteBookingResponse);
     }
 }
